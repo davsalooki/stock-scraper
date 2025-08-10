@@ -1,0 +1,3 @@
+urls:
+  login: "https://www2.commsec.com.au/secure/login"
+  financials: "https://www2.commsec.com.au/quotes/financials"
