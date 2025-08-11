@@ -25,6 +25,7 @@ def login(context: BrowserContext, page: Page) -> None:
     # Non-unique button name, so use exact match
     page.get_by_role("button", name="Login", exact=True).click()
 
+def get_mod_token(context: BrowserContext, page: Page) -> str:
     # Obtain mod_token cookie for financials access
     page.goto(CONFIG["urls"]["financials"])
 
@@ -34,18 +35,20 @@ def login(context: BrowserContext, page: Page) -> None:
     if not mod_token:
         raise Exception("ModToken cookie not found.")
 
-    # Find portion usable in the URL
-    mod_token = mod_token.split("-")[0]
-    
-    print(f"ModToken: {mod_token['value']}")
-
-    page.wait_for_timeout(100000)
-    # context.request.get()
+    # Find portion usable in the company financial's URL
+    return mod_token['value'].split("-")[0]
 
 
-def yoink_info(page: Page) -> None:
-    """Extract financial data from the page."""
-    pass
+def yoink_info(context: BrowserContext, page: Page, mod_token: str, symbol: str) -> list[dict]:
+    """Fetch financial data using the API."""
+    api_request_context = context.request
+    response = api_request_context.get(CONFIG["urls"]["stock_info"], params={
+        "symbol": symbol,
+        "access_token": mod_token
+    })
+
+    data = response.json()["data"]["financials"]
+    return data
 
 def run_scraper() -> None:
     with sync_playwright() as p:
@@ -53,5 +56,13 @@ def run_scraper() -> None:
         context = browser.new_context()
         page = context.new_page()
         login(context, page)
-        print(type(context.cookies()))
+        mod_token = get_mod_token(context, page)
+
+        stocks = ["UNI", "COL"]
+        for stock in stocks:
+            print(f"Fetching data for stock: {stock}")
+            stock_data = yoink_info(context, page, mod_token, stock)
+            print(f"Data for {stock}: {stock_data}")
+            print("-" * 40)
+
         browser.close()
