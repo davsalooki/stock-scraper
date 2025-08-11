@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from playwright.sync_api import sync_playwright, Page
 import os
 
-from src.scraper import run_scraper
+from scraper import run_scraper
 
 load_dotenv()
 
