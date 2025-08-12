@@ -2,6 +2,7 @@
 
 # IDE
 .vscode/
+stock-scraper.code-workspace
 
 # Python-generated files
 __pycache__/
