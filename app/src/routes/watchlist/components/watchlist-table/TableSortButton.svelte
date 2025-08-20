@@ -6,10 +6,10 @@
 	interface TableSortButtonProps extends ComponentProps<typeof Button> {
 		headerName: string;
 	}
-	let { headerName, variant = 'ghost', ...restProps }: TableSortButtonProps = $props();
+	let { headerName, ...restProps }: TableSortButtonProps = $props();
 </script>
 
-<Button {variant} {...restProps}>
+<Button variant="ghost" {...restProps}>
 	{headerName}
-	<ArrowUpDownIcon class="ml-2" />
+	<ArrowUpDownIcon class="ml-3" />
 </Button>

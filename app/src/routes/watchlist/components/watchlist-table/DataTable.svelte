@@ -7,19 +7,19 @@
 	} from '@tanstack/table-core';
 	import { createSvelteTable, FlexRender } from '$lib/components/ui/data-table/index.js';
 	import * as Table from '$lib/components/ui/table/index.js';
+	import type { WatchlistItem } from './columns';
 
-	type DataTableProps<TData, TValue> = {
-		columns: ColumnDef<TData, TValue>[];
-		data: TData[];
+	type WatchlistProps = {
+		columns: ColumnDef<WatchlistItem>[];
+		data: WatchlistItem[];
 	};
 
-	let { data, columns }: DataTableProps<TData, TValue> = $props();
+	let { data, columns }: WatchlistProps = $props();
 	let sorting = $state<SortingState>([]);
+	let selectedStockCode = $state<string | null>(null);
 
 	const table = createSvelteTable({
-		get data() {
-			return data;
-		},
+		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
@@ -58,7 +58,7 @@
 		</Table.Header>
 		<Table.Body>
 			{#each table.getRowModel().rows as row (row.id)}
-				<Table.Row data-state={row.getIsSelected() && 'selected'}>
+				<Table.Row data-state={row.getIsSelected() && 'selected'} onclick={() => selectedStockCode = selectedStockCode === row.original.code ? null : row.original.code}>
 					{#each row.getVisibleCells() as cell (cell.id)}
 						<Table.Cell>
 							<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
@@ -73,3 +73,5 @@
 		</Table.Body>
 	</Table.Root>
 </div>
+
+<p>current stock selected: {selectedStockCode} </p>

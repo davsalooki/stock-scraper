@@ -1,4 +1,4 @@
-import type { ColumnDef } from '@tanstack/table-core';
+import { type ColumnDef } from '@tanstack/table-core';
 import { renderComponent } from '$lib/components/ui/data-table/index.js';
 import SortButton from './TableSortButton.svelte';
 
@@ -18,7 +18,7 @@ export const columns: ColumnDef<WatchlistItem>[] = [
 			renderComponent(SortButton, {
 				headerName: 'Code',
 				onclick: column.getToggleSortingHandler()
-			})
+			}),
 	},
 	{
 		accessorKey: 'name',
@@ -26,7 +26,7 @@ export const columns: ColumnDef<WatchlistItem>[] = [
 			renderComponent(SortButton, {
 				headerName: 'Name',
 				onclick: column.getToggleSortingHandler()
-			})
+			}),
 	},
 	{
 		accessorKey: 'last',
