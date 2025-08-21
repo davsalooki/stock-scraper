@@ -1,4 +1,4 @@
-import type { WatchlistItem } from './columns';
+import type { WatchlistItem } from './components/watchlist-table/columns.js';
 
 export async function load() {
 	// logic to fetch watchlist data here
