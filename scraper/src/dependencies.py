@@ -1,15 +1,11 @@
+import sqlite3
 from typing import Annotated
 
 from fastapi.params import Depends
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
-engine = create_engine("sqlite:///../db/stock-scraper.db", echo=True)  
-Session = sessionmaker(bind=engine)
-
-def get_session():
+def get_connection():
     # Context manager for closing session and autocommitting transactions
-    with Session() as session, session.begin():
-        yield session
+    with sqlite3.connect("../db/stock-scraper.db") as connection:
+        yield connection
 
-SessionDep = Annotated[sessionmaker, Depends(get_session)]
+SessionDep = Annotated[sqlite3.Connection, Depends(get_connection)]
