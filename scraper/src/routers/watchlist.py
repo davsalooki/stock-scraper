@@ -17,7 +17,7 @@ def get_watchlist(connection: ConnectionDep) -> list[Ticker]:
         return ticker_list
 
 @router.post("/watchlist", status_code=status.HTTP_201_CREATED) 
-def add_to_watchlist(ticker: Ticker, connection: ConnectionDep) -> StockInfo:
+def add_to_watchlist(ticker: Ticker, connection: ConnectionDep) -> None:
     stock_info = run_scraper(ticker)
     with connection:
         connection.execute(

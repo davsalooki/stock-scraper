@@ -22,7 +22,7 @@ def get_all_stocks() -> list[Ticker]:
     return res
 
 @router.get("/stocks/{ticker}")
-def get_stock(ticker: str, connection: ConnectionDep) -> StockInfo:
+def get_stock_financials(ticker: str, connection: ConnectionDep) -> StockInfo:
     ticker = Ticker.model_validate(ticker)
     with connection:
         stock_info = connection.execute(
