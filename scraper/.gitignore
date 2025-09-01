@@ -16,4 +16,6 @@ wheels/
 .venv
 
 # SQLite database files
-/db
+db/
+
+.ruff_cache/
