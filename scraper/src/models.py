@@ -12,8 +12,8 @@ class StockInfo(BaseModel):
 class Ticker(BaseModel):
     exchange_code: str
     stock_code: str
-
-    def __repr__(self):
+    
+    def __str__(self):
         return f"{self.exchange_code}:{self.stock_code}"
 
     @model_validator(mode="after")
