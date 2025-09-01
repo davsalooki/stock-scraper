@@ -1,5 +1,6 @@
 import yaml
 
+from .utils import get_ticker_list
 
 def load_config() -> None:
     """Load configuration from YAML file."""
@@ -8,3 +9,5 @@ def load_config() -> None:
         return yaml.safe_load(file)
 
 CONFIG = load_config()
+
+TICKER_LIST = get_ticker_list()
