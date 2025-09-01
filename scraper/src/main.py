@@ -1,16 +1,26 @@
 from dotenv import load_dotenv
-from playwright.sync_api import sync_playwright, Page
-import os
+from fastapi import FastAPI
 
-from scraper import run_scraper
+from .models import Ticker
+from .routers import stocks, watchlist
+from .scraper import run_scraper
 
 load_dotenv()
 
-PAGE_URL = "https://www2.commsec.com.au/quotes/financials?stockCode=UNI&exchangeCode=ASX"
+app = FastAPI()
+
+app.include_router(watchlist.router)
+app.include_router(stocks.router)
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 
 def main():
     print("Hello from stock-scraper!")
-    run_scraper()
+    ticker = Ticker(exchange_code="ASX", stock_code="UNI")
+    x = run_scraper(ticker)
+    print(x)
 
 if __name__ == "__main__":
     main()
