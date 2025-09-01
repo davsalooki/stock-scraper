@@ -24,11 +24,17 @@ def create_tables():
     )
     """
 
-    connection = sqlite3.connect("./db/test.db")
+    # This should only be added if there are no existing watchlists
+    add_watchlist_command = """
+    INSERT OR IGNORE INTO watchlist (id) VALUES (1)
+    """
+
+    connection = sqlite3.connect("./db/stock-scraper.db")
     with connection:
         connection.execute(create_stock_command)
         connection.execute(create_watchlist_command)
         connection.execute(create_watchlist_item_cmd)
+        connection.execute(add_watchlist_command)
     connection.close()
 
 if __name__ == "__main__":
