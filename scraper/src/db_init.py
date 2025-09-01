@@ -1,7 +1,7 @@
 import sqlite3
 
 
-def create_tables():
+def setup_db():
     create_stock_command = """
     CREATE TABLE IF NOT EXISTS stocks (
         ticker TEXT PRIMARY KEY,
@@ -39,4 +39,4 @@ def create_tables():
 
 
 if __name__ == "__main__":
-    create_tables()
+    setup_db()
