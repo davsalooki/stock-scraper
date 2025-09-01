@@ -10,13 +10,13 @@ def create_tables():
     """
 
     create_watchlist_command = """
-    CREATE TABLE IF NOT EXISTS watchlist (
+    CREATE TABLE IF NOT EXISTS watchlists (
         id INTEGER PRIMARY KEY AUTOINCREMENT
     )
     """
 
     create_watchlist_item_cmd = """
-    CREATE TABLE IF NOT EXISTS watchlist_item (
+    CREATE TABLE IF NOT EXISTS watchlist_items (
         watchlist_id INTEGER NOT NULL,
         ticker TEXT NOT NULL,
         PRIMARY KEY (watchlist_id, ticker),
@@ -26,7 +26,7 @@ def create_tables():
 
     # This should only be added if there are no existing watchlists
     add_watchlist_command = """
-    INSERT OR IGNORE INTO watchlist (id) VALUES (1)
+    INSERT OR IGNORE INTO watchlists (id) VALUES (1)
     """
 
     connection = sqlite3.connect("./db/stock-scraper.db")
