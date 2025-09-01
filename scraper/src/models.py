@@ -3,9 +3,11 @@ from pydantic import BaseModel, model_validator
 
 from .config import TICKER_LIST
 
+
 class StockInfo(BaseModel):
     financials: dict[str, str | int | float]
     earnings_roe_chart: str
+
 
 class Ticker(BaseModel):
     exchange_code: str
@@ -19,6 +21,7 @@ class Ticker(BaseModel):
         if f"{self.exchange_code}:{self.stock_code}" not in TICKER_LIST:
             raise ValueError("Invalid stock code")
         return self
+
 
 class Stock(BaseModel):
     ticker: Ticker

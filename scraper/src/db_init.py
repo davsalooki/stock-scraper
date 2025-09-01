@@ -37,5 +37,6 @@ def create_tables():
         connection.execute(add_watchlist_command)
     connection.close()
 
+
 if __name__ == "__main__":
     create_tables()
