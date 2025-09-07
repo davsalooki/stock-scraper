@@ -4,8 +4,11 @@ import sqlite3
 def setup_db():
     create_stock_command = """
     CREATE TABLE IF NOT EXISTS stocks (
-        ticker TEXT PRIMARY KEY,
-        financial_data TEXT
+        exchange_code TEXT,
+        ticker_symbol TEXT,
+        name TEXT,
+        financials TEXT,
+        PRIMARY KEY (exchange_code, ticker_symbol)
     )
     """
 
@@ -17,9 +20,11 @@ def setup_db():
 
     create_watchlist_item_cmd = """
     CREATE TABLE IF NOT EXISTS watchlist_items (
-        watchlist_id INTEGER NOT NULL,
-        ticker TEXT NOT NULL,
-        PRIMARY KEY (watchlist_id, ticker),
+        watchlist_id INTEGER,
+        exchange_code TEXT,
+        ticker_symbol TEXT,
+
+        PRIMARY KEY (watchlist_id, exchange_code, ticker_symbol),
         FOREIGN KEY (watchlist_id) REFERENCES watchlists(id)
     )
     """
