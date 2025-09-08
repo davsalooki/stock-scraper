@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from .db_init import setup_db
 
-from .models import Ticker
+from .models import StockIdentifier
 from .routers import stocks, watchlist
 from .scraper import run_scraper
 
@@ -28,8 +28,8 @@ def read_root():
 
 def main():
     print("Hello from stock-scraper!")
-    ticker = Ticker(exchange_code="ASX", stock_code="UNI")
-    x = run_scraper(ticker)
+    stock_identifier = StockIdentifier(exchange_code="ASX", ticker_symbol="UNI")
+    x = run_scraper(stock_identifier)
     print(x)
 
 
