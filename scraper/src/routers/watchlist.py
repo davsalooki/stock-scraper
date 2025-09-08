@@ -1,46 +1,51 @@
 from fastapi import APIRouter, status
 
-from ..dependencies import ConnectionDep
-from ..models import Ticker
+from ..dependencies import ConnectionDep, StockIdentifierDep
+from ..models import StockSummary
 from ..scraper import run_scraper
 
 router = APIRouter()
 
 
 @router.get("/watchlist")
-def get_watchlist(connection: ConnectionDep) -> list[Ticker]:
+def get_watchlist(connection: ConnectionDep) -> list[StockSummary]:
     with connection:
-        result = connection.execute(
-            "SELECT * FROM watchlist_items WHERE watchlist_id = ?", (1,)
-        )
-        ticker_list = []
+        result = connection.execute("""
+            SELECT s.exchange_code, s.ticker_symbol, s.name
+            FROM stocks s
+            JOIN watchlist_items w ON s.exchange_code = w.exchange_code AND s.ticker_symbol = w.ticker_symbol
+            WHERE w.watchlist_id = ?
+        """, (1,))
+        stock_summary_list = []
         for row in result.fetchall():
-            ticker = Ticker.model_validate(row)
-            ticker_list.append(ticker)
-        return ticker_list
+            stock_summary = StockSummary(
+                **dict(row)
+            )
+            stock_summary_list.append(stock_summary)
+        return stock_summary_list
 
 
 @router.post("/watchlist", status_code=status.HTTP_201_CREATED)
-def add_to_watchlist(ticker: Ticker, connection: ConnectionDep) -> None:
-    stock_info = run_scraper(ticker)
+def add_to_watchlist(connection: ConnectionDep, stock_identifier: StockIdentifierDep) -> None:
+    stock = run_scraper(stock_identifier)
     with connection:
         connection.execute(
-            "INSERT INTO watchlist_items (watchlist_id, ticker) VALUES (?, ?)",
-            (1, ticker),
+            "INSERT INTO watchlist_items (watchlist_id, exchange_code, ticker_symbol) VALUES (?, ?, ?)",
+            (1, stock.exchange_code, stock.ticker_symbol)
         )
 
         connection.execute(
-            "INSERT INTO stocks (ticker, financial_data) VALUES (?, ?)",
-            (ticker, stock_info.model_dump_json()),
+            "REPLACE INTO stocks (exchange_code, ticker_symbol, name, financials) VALUES (?, ?, ?, ?)",
+            (stock.exchange_code, stock.ticker_symbol, stock.name, stock.financials.model_dump_json())
         )
     connection.close()
 
 
-@router.delete("/watchlist", status_code=status.HTTP_204_NO_CONTENT)
-def remove_from_watchlist(ticker: Ticker, connection: ConnectionDep) -> None:
+@router.delete("/watchlist/stocks/{exchange_code}/{ticker_symbol}", status_code=status.HTTP_204_NO_CONTENT)
+def remove_from_watchlist(connection: ConnectionDep, stock_identifier: StockIdentifierDep) -> None:
     with connection:
         connection.execute(
-            "DELETE FROM watchlist_items WHERE watchlist_id = ? AND ticker = ?",
-            (1, ticker),
+            "DELETE FROM watchlist_items WHERE watchlist_id = ? AND exchange_code = ? AND ticker_symbol = ?",
+            (1, stock_identifier.exchange_code, stock_identifier.ticker_symbol),
         )
     connection.close()
