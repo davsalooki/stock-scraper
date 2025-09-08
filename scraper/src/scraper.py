@@ -4,8 +4,8 @@ import os
 from playwright.sync_api import sync_playwright, Page, BrowserContext
 from dotenv import load_dotenv
 
-from .config import CONFIG
-from .models import StockInfo, Ticker
+from .config import CONFIG, STOCK_ID_TO_NAME
+from .models import Stock, StockFinancials, StockIdentifier
 
 load_dotenv()
 
@@ -38,39 +38,38 @@ def get_mod_token(context: BrowserContext, page: Page) -> str:
     )
 
     if not mod_token:
-        raise Exception("ModToken cookie not found.")
+        raise Exception("ModToken cookie not found or empty.")
 
     # Find portion usable in the company financial's URL
     return mod_token["value"].split("-")[0]
 
 
-def yoink_info(
-    context: BrowserContext, page: Page, mod_token: str, ticker: Ticker
-) -> StockInfo:
+def yoink_financials(
+    context: BrowserContext, page: Page, mod_token: str, identifier: StockIdentifier
+) -> StockFinancials:
     """Fetch financial data using the API."""
     api_request_context = context.request
     response = api_request_context.get(
         CONFIG["urls"]["stock_info"],
         params={
             "access_token": mod_token,
-            "exchangeCode": ticker.exchange_code,
-            "symbol": ticker.stock_code,
+            "exchangeCode": identifier.exchange_code,
+            "symbol": identifier.ticker_symbol,
         },
     )
 
     response_json = response.json()
 
     # Return the most recent data, first in the List
-    return_data = StockInfo(
-        financials=response_json["data"]["financials"][0],
+    return_data = StockFinancials(
+        stats=response_json["data"]["financials"][0],
         earnings_roe_chart=response_json["data"]["financialChartSrc"],
     )
 
     return return_data
 
-
-def run_scraper(ticker: Ticker) -> StockInfo:
-    """Scrapes stock financial info from CommSec."""
+def run_scraper(identifier: StockIdentifier) -> Stock:
+    """Scrapes stock info from CommSec."""
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True, slow_mo=1000)
         context = browser.new_context()
@@ -79,8 +78,14 @@ def run_scraper(ticker: Ticker) -> StockInfo:
         login(context, page)
 
         mod_token = get_mod_token(context, page)
-        data = yoink_info(context, page, mod_token, ticker)
+        financials = yoink_financials(context, page, mod_token, identifier)
+        name = STOCK_ID_TO_NAME[str(identifier)]
 
         browser.close()
 
-    return data
+    return Stock(
+        exchange_code=identifier.exchange_code,
+        ticker_symbol=identifier.ticker_symbol,
+        name=name,
+        financials=financials
+    )
