@@ -1,8 +1,7 @@
-from enum import Enum
-from typing import Literal, Self
+from typing import Self
 from pydantic import BaseModel, model_validator
 
-from .config import TICKER_LIST
+from .config import STOCK_ID_LIST
 
 class StockBase(BaseModel):
     exchange_code: str
@@ -13,14 +12,14 @@ class StockBase(BaseModel):
 
     @model_validator(mode="after")
     def is_a_stock(self) -> Self:
-        if f"{self.exchange_code}:{self.ticker_symbol}" not in TICKER_LIST:
+        if f"{self.exchange_code}:{self.ticker_symbol}" not in STOCK_ID_LIST:
             raise ValueError("Invalid stock identifier")
         return self
     
 class StockIdentifier(StockBase):
     pass
 
-class ReadStock(StockBase):
+class StockSummary(StockBase):
     name: str
 
 class StockFinancials(BaseModel):
