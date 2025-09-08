@@ -68,6 +68,7 @@ def yoink_financials(
 
     return return_data
 
+
 def run_scraper(identifier: StockIdentifier) -> Stock:
     """Scrapes stock info from CommSec."""
     with sync_playwright() as p:
@@ -87,5 +88,5 @@ def run_scraper(identifier: StockIdentifier) -> Stock:
         exchange_code=identifier.exchange_code,
         ticker_symbol=identifier.ticker_symbol,
         name=name,
-        financials=financials
+        financials=financials,
     )

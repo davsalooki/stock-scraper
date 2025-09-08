@@ -1,4 +1,4 @@
-from contextlib import asynccontextmanager, contextmanager
+from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI
 
@@ -10,10 +10,12 @@ from .scraper import run_scraper
 
 load_dotenv()
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     setup_db()
     yield
+
 
 app = FastAPI(lifespan=lifespan)
 

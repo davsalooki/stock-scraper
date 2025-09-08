@@ -13,12 +13,17 @@ def get_connection():
     connection.row_factory = sqlite3.Row
     return connection
 
+
 def stock_identifier(exchange_code: str, ticker_symbol: str) -> StockIdentifier:
     try:
-        stock_id = StockIdentifier(exchange_code=exchange_code.upper(), ticker_symbol=ticker_symbol.upper())
+        stock_id = StockIdentifier(
+            exchange_code=exchange_code.upper(), ticker_symbol=ticker_symbol.upper()
+        )
     except ValidationError as e:
         print("Validation error:", e)
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid stock identifier")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid stock identifier"
+        )
     return stock_id
 
 

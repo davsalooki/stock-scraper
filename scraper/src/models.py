@@ -3,6 +3,7 @@ from pydantic import BaseModel, model_validator
 
 from .config import STOCK_ID_LIST
 
+
 class StockBase(BaseModel):
     exchange_code: str
     ticker_symbol: str
@@ -15,16 +16,20 @@ class StockBase(BaseModel):
         if f"{self.exchange_code}:{self.ticker_symbol}" not in STOCK_ID_LIST:
             raise ValueError("Invalid stock identifier")
         return self
-    
+
+
 class StockIdentifier(StockBase):
     pass
+
 
 class StockSummary(StockBase):
     name: str
 
+
 class StockFinancials(BaseModel):
     stats: dict[str, str | int | float]
     earnings_roe_chart: str
+
 
 class Stock(StockBase):
     name: str

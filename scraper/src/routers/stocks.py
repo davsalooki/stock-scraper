@@ -1,10 +1,9 @@
-import json
 from fastapi import APIRouter
 
 from ..scraper import run_scraper
 
 from ..dependencies import ConnectionDep, StockIdentifierDep
-from ..models import StockFinancials, StockFinancials, StockSummary
+from ..models import StockFinancials, StockSummary
 
 from ..config import STOCK_ID_TO_NAME
 
@@ -15,13 +14,19 @@ router = APIRouter()
 def get_all_stocks() -> list[StockSummary]:
     res = []
     for stock_id, name in STOCK_ID_TO_NAME.items():
-        dict_row = {"exchange_code": stock_id.split(":")[0], "ticker_symbol": stock_id.split(":")[1], "name": name}
+        dict_row = {
+            "exchange_code": stock_id.split(":")[0],
+            "ticker_symbol": stock_id.split(":")[1],
+            "name": name,
+        }
         res.append(StockSummary.model_validate(dict_row))
     return res
 
 
 @router.get("/stocks/{exchange_code}/{ticker_symbol}/financials")
-def get_stock_financials(connection: ConnectionDep, stock_identifier: StockIdentifierDep) -> StockFinancials:
+def get_stock_financials(
+    connection: ConnectionDep, stock_identifier: StockIdentifierDep
+) -> StockFinancials:
     with connection:
         row = connection.execute(
             "SELECT financials FROM stocks WHERE exchange_code = ? AND ticker_symbol = ?",
@@ -34,11 +39,17 @@ def get_stock_financials(connection: ConnectionDep, stock_identifier: StockIdent
 
 
 @router.post("/stocks/{exchange_code}/{ticker_symbol}/update", status_code=204)
-def update_stock(connection: ConnectionDep, stock_identifier: StockIdentifierDep) -> None:
+def update_stock(
+    connection: ConnectionDep, stock_identifier: StockIdentifierDep
+) -> None:
     stock = run_scraper(stock_identifier)
     with connection:
         connection.execute(
             "UPDATE stocks SET financials = ? WHERE exchange_code = ? AND ticker_symbol = ?",
-            (stock.financials.model_dump_json(), stock_identifier.exchange_code, stock_identifier.ticker_symbol),
+            (
+                stock.financials.model_dump_json(),
+                stock_identifier.exchange_code,
+                stock_identifier.ticker_symbol,
+            ),
         )
     connection.close()
