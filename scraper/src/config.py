@@ -1,6 +1,6 @@
 import yaml
 
-from .utils import get_ticker_list
+from .utils import get_stock_id_to_name
 
 
 def load_config() -> None:
@@ -12,4 +12,6 @@ def load_config() -> None:
 
 CONFIG = load_config()
 
-TICKER_LIST = get_ticker_list()
+STOCK_ID_TO_NAME = get_stock_id_to_name()
+
+STOCK_ID_LIST = STOCK_ID_TO_NAME.keys()
