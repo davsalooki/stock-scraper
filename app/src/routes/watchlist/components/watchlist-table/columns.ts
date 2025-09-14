@@ -5,7 +5,8 @@ import SortButton from './TableSortButton.svelte';
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type WatchlistItem = {
-	code: string;
+	exchange: string;
+	ticker: string;
 	name: string;
 	last: number;
 	percentageChange: number;
@@ -13,10 +14,14 @@ export type WatchlistItem = {
 
 export const columns: ColumnDef<WatchlistItem>[] = [
 	{
-		accessorKey: 'code',
+		accessorKey: 'exchange',
+		header: 'Exchange',
+	},
+	{
+		accessorKey: 'ticker',
 		header: ({ column }) =>
 			renderComponent(SortButton, {
-				headerName: 'Code',
+				headerName: 'Ticker',
 				onclick: column.getToggleSortingHandler()
 			}),
 	},

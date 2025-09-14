@@ -22,7 +22,7 @@
 				<AddStockTable {data} {columns} bind:selectedStocks/>
 				<p>Selected stocks:</p>
 				<ul>
-					{#each selectedStocks as stock (stock.code)}
+					{#each selectedStocks as stock (stock.ticker)}
 						<li>{stock.name}</li>
 					{/each}
 				</ul>

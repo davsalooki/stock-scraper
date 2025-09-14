@@ -8,6 +8,7 @@
 	import { createSvelteTable, FlexRender } from '$lib/components/ui/data-table/index.js';
 	import * as Table from '$lib/components/ui/table/index.js';
 	import type { WatchlistItem } from './columns';
+	import { goto } from '$app/navigation';
 
 	type WatchlistProps = {
 		columns: ColumnDef<WatchlistItem>[];
@@ -58,13 +59,21 @@
 		</Table.Header>
 		<Table.Body>
 			{#each table.getRowModel().rows as row (row.id)}
-				<Table.Row data-state={row.getIsSelected() && 'selected'} onclick={() => selectedStockCode = selectedStockCode === row.original.code ? null : row.original.code}>
-					{#each row.getVisibleCells() as cell (cell.id)}
-						<Table.Cell>
-							<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
-						</Table.Cell>
-					{/each}
-				</Table.Row>
+				<!-- <a href={`/watchlist/stocks/${row.original.exchange}/${row.original.code}`}> -->
+					<Table.Row
+						data-state={row.getIsSelected() && 'selected'}
+						onclick={() => {
+							selectedStockCode = selectedStockCode === row.original.ticker ? null : row.original.ticker;
+							goto(`/watchlist/stocks/${row.original.exchange}/${row.original.ticker}`);
+						}}
+					>
+						{#each row.getVisibleCells() as cell (cell.id)}
+							<Table.Cell>
+								<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
+							</Table.Cell>
+						{/each}
+					</Table.Row>
+				<!-- </a> -->
 			{:else}
 				<Table.Row>
 					<Table.Cell colspan={columns.length} class="h-24 text-center">No results.</Table.Cell>
