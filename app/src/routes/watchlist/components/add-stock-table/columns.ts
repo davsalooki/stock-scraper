@@ -7,7 +7,7 @@ import { Checkbox } from '$lib/components/ui/checkbox';
 // You can use a Zod schema here if you want.
 export type AddStockItem = {
 	exchange: string;
-	code: string;
+	ticker: string;
 	name: string;
 };
 
@@ -37,10 +37,10 @@ export const columns: ColumnDef<AddStockItem>[] = [
 		header: 'Exchange',
 	},
 	{
-		accessorKey: 'code',
+		accessorKey: 'ticker',
 		header: ({ column }) =>
 			renderComponent(SortButton, {
-				headerName: 'Code',
+				headerName: 'Ticker',
 				onclick: column.getToggleSortingHandler()
 			}),
 	},
