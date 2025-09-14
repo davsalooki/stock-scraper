@@ -56,6 +56,8 @@ def yoink_financials(
             "exchangeCode": identifier.exchange_code,
             "symbol": identifier.ticker_symbol,
             "isNewFinancialsColor": True,  # Need this otherwise it becomes pixellated and ugly
+            "width": 472,
+            "height": 239,
         },
     )
 
