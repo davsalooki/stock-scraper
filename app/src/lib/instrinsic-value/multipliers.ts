@@ -59,6 +59,9 @@ function mapReturnToColumn(requiredReturn: number): number {
 function mapRoeToRow(roe: number): number {
   // Rows from 5.00% to 60.00%, 2.5% increments
   // Linear map with two points: (5,0) and (60,22)
+  
+  // Floor to a multiple of 2.5
+  roe = Math.floor(roe / 2.5) * 2.5;
   return 0.4 * roe - 2;
 
 }
