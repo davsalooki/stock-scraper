@@ -63,7 +63,7 @@
 					<Table.Row
 						data-state={row.getIsSelected() && 'selected'}
 						onclick={() => {
-							selectedStockCode = selectedStockCode === row.original.ticker ? null : row.original.ticker;
+							selectedStockCode = row.original.ticker;
 							goto(`/watchlist/stocks/${row.original.exchange}/${row.original.ticker}`);
 						}}
 					>
