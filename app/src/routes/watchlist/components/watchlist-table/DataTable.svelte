@@ -13,7 +13,7 @@
 	type WatchlistProps = {
 		columns: ColumnDef<WatchlistItem>[];
 		data: WatchlistItem[];
-		selectedStockCode?: string | null;
+		selectedStockCode?: SelectedStock | null;
 	};
 
 	let { data, columns, selectedStockCode = $bindable() }: WatchlistProps = $props();
@@ -63,7 +63,10 @@
 					<Table.Row
 						data-state={row.getIsSelected() && 'selected'}
 						onclick={() => {
-							selectedStockCode = row.original.ticker;
+							selectedStockCode = {
+								exchange: row.original.exchange,
+								ticker: row.original.ticker
+							};
 							goto(`/watchlist/stocks/${row.original.exchange}/${row.original.ticker}`);
 						}}
 					>
@@ -83,4 +86,4 @@
 	</Table.Root>
 </div>
 
-<p>current stock selected: {selectedStockCode ? selectedStockCode : 'None'} </p>
+<p>current stock selected: {selectedStockCode ? selectedStockCode.ticker : 'None'} </p>
