@@ -1,7 +1,7 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 import type { AddStockItem } from './components/add-stock-table/columns.js';
 import type { WatchlistItem } from './components/watchlist-table/columns.js';
-import type { StockSummary } from './types.js';
+import type { StockOverview } from './types.js';
 
 export async function load() {
 	// Fetch both APIs in parallel for better performance
@@ -13,8 +13,8 @@ export async function load() {
 	if (!watchlistRes.ok || !stocksRes.ok) {
 		throw new Error('Failed to fetch data');
 	}
-	
-	const [watchlistData, stocksData]: [StockSummary[], StockSummary[]] = await Promise.all([
+
+	const [watchlistData, stocksData]: [StockOverview[], StockOverview[]] = await Promise.all([
 		watchlistRes.json(),
 		stocksRes.json()
 	]);
@@ -23,8 +23,7 @@ export async function load() {
 		exchange: item.exchange_code,
 		ticker: item.ticker_symbol,
 		name: item.name,
-		last: 0,
-		percentageChange: 0,
+		last: item.last,
 	}));
 	
 	const addStockItems: AddStockItem[] = stocksData.map((item) => ({

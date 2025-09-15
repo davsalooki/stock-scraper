@@ -8,7 +8,7 @@
     const roe = $derived(data.financials.stats.returnEquity);
     const eps = $derived(data.financials.stats.earnings);
     const dps = $derived(data.financials.stats.dividends);
-    let requiredReturn = $state(15);
+    let requiredReturn = $state(10);
 
     const intrinsicValue = $derived.by(() => {
         return calculateIntrinsicValue({

@@ -59,16 +59,15 @@
 		</Table.Header>
 		<Table.Body>
 			{#each table.getRowModel().rows as row (row.id)}
-				<!-- <a href={`/watchlist/stocks/${row.original.exchange}/${row.original.code}`}> -->
 					<Table.Row
-						data-state={row.getIsSelected() && 'selected'}
-						onclick={() => {
-							selectedStock = {
-								exchange: row.original.exchange,
-								ticker: row.original.ticker
-							};
-							goto(`/watchlist/stocks/${row.original.exchange}/${row.original.ticker}`);
-						}}
+					onclick={() => {
+						selectedStock = {
+							exchange: row.original.exchange,
+							ticker: row.original.ticker
+						};
+						goto(`/watchlist/stocks/${row.original.exchange}/${row.original.ticker}`);
+					}}
+					data-state={selectedStock && selectedStock.ticker === row.original.ticker ? 'selected' : undefined}
 					>
 						{#each row.getVisibleCells() as cell (cell.id)}
 							<Table.Cell>
@@ -76,7 +75,6 @@
 							</Table.Cell>
 						{/each}
 					</Table.Row>
-				<!-- </a> -->
 			{:else}
 				<Table.Row>
 					<Table.Cell colspan={columns.length} class="h-24 text-center">No results.</Table.Cell>

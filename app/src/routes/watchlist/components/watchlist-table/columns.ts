@@ -9,7 +9,6 @@ export type WatchlistItem = {
 	ticker: string;
 	name: string;
 	last: number;
-	percentageChange: number;
 };
 
 export const columns: ColumnDef<WatchlistItem>[] = [
@@ -36,9 +35,5 @@ export const columns: ColumnDef<WatchlistItem>[] = [
 	{
 		accessorKey: 'last',
 		header: 'Last Price'
-	},
-	{
-		accessorKey: 'percentageChange',
-		header: 'Change %'
 	}
 ];
