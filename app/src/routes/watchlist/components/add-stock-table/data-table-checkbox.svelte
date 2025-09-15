@@ -10,4 +10,3 @@
 </script>
  
 <Checkbox bind:checked={() => checked, onCheckedChange} {...restProps} />
-    
