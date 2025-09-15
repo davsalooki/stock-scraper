@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Slider } from '$lib/components/ui/slider/index.js';
 	import { calculateIntrinsicValue } from '$lib/instrinsic-value/calculation.js';
+	import { maxDate } from '@internationalized/date';
 
     let { data } = $props();
 
@@ -11,10 +12,18 @@
     let requiredReturn = $state(10);
 
     const intrinsicValue = $derived.by(() => {
+        console.log("Calculating intrinsic value with:", {
+            equityPerShare,
+            shares: 1,
+            roe: Math.min(roe, 60),
+            eps,
+            dps,
+            requiredReturn
+        });
         return calculateIntrinsicValue({
             equity: equityPerShare,
             shares: 1,
-            roe,
+            roe: Math.min(roe, 60),
             eps,
             dps,
             requiredReturn
@@ -22,8 +31,20 @@
     });
 </script>
 
-<p>Intrinsic value: {intrinsicValue}</p>
-<p>Required return: {requiredReturn}</p>
-<Slider type="single" min={4} max={15} step={1} bind:value={requiredReturn} />
-
-<img src={data.financials.earnings_roe_chart} alt="Earnings and Return on Equity Chart" />
+<div>
+    <div class="flex items-center gap-4 mb-4">
+        <p>Intrinsic value: {Math.round(intrinsicValue*100)/100}</p>
+        <p>Required return: {requiredReturn}</p>
+        <div class="flex-1">
+            <Slider type="single" min={4} max={15} step={1} bind:value={requiredReturn} />
+        </div>
+    </div>
+    
+    <img src={data.financials.earnings_roe_chart} alt="Earnings and Return on Equity Chart" />
+    
+    {#if roe > 60}
+        <div class="basis-1/4 text-red-500 text-center p-5">
+            <p>Warning: ROE is very high ({roe}%), capping at 60% for intrinsic value calculation.</p>
+        </div>
+    {/if}
+</div>

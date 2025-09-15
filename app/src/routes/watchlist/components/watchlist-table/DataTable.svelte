@@ -83,5 +83,3 @@
 		</Table.Body>
 	</Table.Root>
 </div>
-
-<p>current stock selected: {selectedStock ? selectedStock.ticker : 'None'} </p>
