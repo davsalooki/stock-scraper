@@ -9,7 +9,8 @@ from src.models import StockIdentifier
 
 
 def get_connection():
-    connection = sqlite3.connect("./db/stock-scraper.db")
+    # TODO: fix multithreaded safety properly
+    connection = sqlite3.connect("./db/stock-scraper.db", check_same_thread=False)
     connection.row_factory = sqlite3.Row
     return connection
 

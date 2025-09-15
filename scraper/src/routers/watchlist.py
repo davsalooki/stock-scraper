@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 
 from ..dependencies import ConnectionDep, StockIdentifierDep
-from ..models import StockSummary
+from ..models import StockIdentifier, StockSummary
 from ..scraper import run_scraper
 
 router = APIRouter()
@@ -28,7 +28,7 @@ def get_watchlist(connection: ConnectionDep) -> list[StockSummary]:
 
 @router.post("/watchlist", status_code=status.HTTP_201_CREATED)
 def add_to_watchlist(
-    connection: ConnectionDep, stock_identifier: StockIdentifierDep
+    connection: ConnectionDep, stock_identifier: StockIdentifier
 ) -> None:
     stock = run_scraper(stock_identifier)
     with connection:
