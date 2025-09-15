@@ -2,12 +2,19 @@
 	import AddStockDialog from './components/AddStockDialog.svelte';
 	import DataTable from './components/watchlist-table/DataTable.svelte';
 	import RemoveStockWarning from './components/RemoveStockWarning.svelte';
-	import { columns } from './components/watchlist-table/columns.js';
+	import { columns, type WatchlistItem } from './components/watchlist-table/columns.js';
 	import { page } from '$app/state';
+	import type { AddStockItem } from './components/add-stock-table/columns';
+	import type { Snippet } from 'svelte';
 
-	let { data, children } = $props();
-
-	console.log(page.params, page.route, page.url);
+	type WatchlistProps = {
+		data: {
+			watchlist: WatchlistItem[];
+			addStockItems: AddStockItem[];
+		};
+		children: Snippet;
+	};
+	let { data, children }: WatchlistProps = $props();
 
 	let selectedStock = $state<StockIdentifier | null>(null);
 	if (page.url.pathname.includes('stocks')) {
