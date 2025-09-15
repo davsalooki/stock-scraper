@@ -14,7 +14,7 @@ export type WatchlistItem = {
 export const columns: ColumnDef<WatchlistItem>[] = [
 	{
 		accessorKey: 'exchange',
-		header: 'Exchange',
+		header: 'Exchange'
 	},
 	{
 		accessorKey: 'ticker',
@@ -22,7 +22,7 @@ export const columns: ColumnDef<WatchlistItem>[] = [
 			renderComponent(SortButton, {
 				headerName: 'Ticker',
 				onclick: column.getToggleSortingHandler()
-			}),
+			})
 	},
 	{
 		accessorKey: 'name',
@@ -30,7 +30,7 @@ export const columns: ColumnDef<WatchlistItem>[] = [
 			renderComponent(SortButton, {
 				headerName: 'Name',
 				onclick: column.getToggleSortingHandler()
-			}),
+			})
 	},
 	{
 		accessorKey: 'last',

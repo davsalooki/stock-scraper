@@ -18,7 +18,7 @@
 		<Dialog.Header>
 			<Dialog.Title>Add stock to watchlist</Dialog.Title>
 			<Dialog.Description>
-				<AddStockTable {data} {columns} bind:selectedStocks/>
+				<AddStockTable {data} {columns} bind:selectedStocks />
 				<p>Selected stocks:</p>
 				<ul>
 					{#each selectedStocks as stock (stock.ticker)}

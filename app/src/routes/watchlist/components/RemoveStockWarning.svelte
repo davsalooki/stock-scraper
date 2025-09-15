@@ -27,7 +27,6 @@
 				<input type="hidden" name="ticker" value={selectedStock?.ticker} />
 				<AlertDialog.Action>Confirm</AlertDialog.Action>
 			</form>
-			
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>

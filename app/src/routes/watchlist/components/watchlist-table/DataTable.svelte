@@ -18,7 +18,7 @@
 
 	let { data, columns, selectedStock: selectedStock = $bindable() }: WatchlistProps = $props();
 	let sorting = $state<SortingState>([]);
-		
+
 	const table = createSvelteTable({
 		data,
 		columns,
@@ -59,7 +59,7 @@
 		</Table.Header>
 		<Table.Body>
 			{#each table.getRowModel().rows as row (row.id)}
-					<Table.Row
+				<Table.Row
 					onclick={() => {
 						selectedStock = {
 							exchange: row.original.exchange,
@@ -67,14 +67,16 @@
 						};
 						goto(`/watchlist/stocks/${row.original.exchange}/${row.original.ticker}`);
 					}}
-					data-state={selectedStock && selectedStock.ticker === row.original.ticker ? 'selected' : undefined}
-					>
-						{#each row.getVisibleCells() as cell (cell.id)}
-							<Table.Cell>
-								<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
-							</Table.Cell>
-						{/each}
-					</Table.Row>
+					data-state={selectedStock && selectedStock.ticker === row.original.ticker
+						? 'selected'
+						: undefined}
+				>
+					{#each row.getVisibleCells() as cell (cell.id)}
+						<Table.Cell>
+							<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
+						</Table.Cell>
+					{/each}
+				</Table.Row>
 			{:else}
 				<Table.Row>
 					<Table.Cell colspan={columns.length} class="h-24 text-center">No results.</Table.Cell>

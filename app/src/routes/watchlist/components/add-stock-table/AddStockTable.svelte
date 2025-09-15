@@ -32,68 +32,66 @@
 	$effect(() => {
 		console.log('Selected Rows:', selectedStocks);
 	});
-	const table = $state(createSvelteTable({
-		data,
-		columns,
-		getCoreRowModel: getCoreRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		getFilteredRowModel: getFilteredRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		globalFilterFn: 'includesString',
-		onSortingChange: (updater) => {
-			if (typeof updater === 'function') {
-				sorting = updater(sorting);
-			} else {
-				sorting = updater;
-			}
-		},
-		onRowSelectionChange: (updater) => {
-			if (typeof updater === "function") {
-				rowSelection = updater(rowSelection);
-			} else {
-				rowSelection = updater;
-			}
+	const table = $state(
+		createSvelteTable({
+			data,
+			columns,
+			getCoreRowModel: getCoreRowModel(),
+			getSortedRowModel: getSortedRowModel(),
+			getFilteredRowModel: getFilteredRowModel(),
+			getPaginationRowModel: getPaginationRowModel(),
+			globalFilterFn: 'includesString',
+			onSortingChange: (updater) => {
+				if (typeof updater === 'function') {
+					sorting = updater(sorting);
+				} else {
+					sorting = updater;
+				}
+			},
+			onRowSelectionChange: (updater) => {
+				if (typeof updater === 'function') {
+					rowSelection = updater(rowSelection);
+				} else {
+					rowSelection = updater;
+				}
 
-			selectedStocks = table.getSelectedRowModel().rows.map(row => row.original);
-		},
-		onGlobalFilterChange: (updater) => {
-			if (typeof updater === 'function') {
-				globalFilter = updater(globalFilter);
-			} else {
-				globalFilter = updater;
-			}
-		},
-		onPaginationChange: (updater) => {
-			if (typeof updater === 'function') {
-				pagination = updater(pagination);
-			} else {
-				pagination = updater;
-			}
-		},
-		state: {
-			get sorting() {
-				return sorting;
+				selectedStocks = table.getSelectedRowModel().rows.map((row) => row.original);
 			},
-			get rowSelection() {
-				return rowSelection;
+			onGlobalFilterChange: (updater) => {
+				if (typeof updater === 'function') {
+					globalFilter = updater(globalFilter);
+				} else {
+					globalFilter = updater;
+				}
 			},
-			get globalFilter() {
-				return globalFilter;
+			onPaginationChange: (updater) => {
+				if (typeof updater === 'function') {
+					pagination = updater(pagination);
+				} else {
+					pagination = updater;
+				}
 			},
-			get pagination() {
-				return pagination;
+			state: {
+				get sorting() {
+					return sorting;
+				},
+				get rowSelection() {
+					return rowSelection;
+				},
+				get globalFilter() {
+					return globalFilter;
+				},
+				get pagination() {
+					return pagination;
+				}
 			}
-		}
-	}));
+		})
+	);
 </script>
 
 <div>
 	<div class="flex items-center py-4">
-		<Input
-		placeholder="Filter stocks..."
-		bind:value={globalFilter}
-		class="max-w-sm"
-		/>
+		<Input placeholder="Filter stocks..." bind:value={globalFilter} class="max-w-sm" />
 	</div>
 	<div class="rounded-md border">
 		<Table.Root>
@@ -132,20 +130,20 @@
 	</div>
 	<div class="flex items-center justify-end space-x-2 py-4">
 		<Button
-		variant="outline"
-		size="sm"
-		onclick={() => table.previousPage()}
-		disabled={!table.getCanPreviousPage()}
+			variant="outline"
+			size="sm"
+			onclick={() => table.previousPage()}
+			disabled={!table.getCanPreviousPage()}
 		>
-		Previous
+			Previous
 		</Button>
 		<Button
-		variant="outline"
-		size="sm"
-		onclick={() => table.nextPage()}
-		disabled={!table.getCanNextPage()}
+			variant="outline"
+			size="sm"
+			onclick={() => table.nextPage()}
+			disabled={!table.getCanNextPage()}
 		>
-		Next
+			Next
 		</Button>
 	</div>
 </div>

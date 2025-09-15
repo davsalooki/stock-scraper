@@ -1,4 +1,4 @@
 interface StockIdentifier {
-    exchange?: string;
-    ticker?: string;
+	exchange?: string;
+	ticker?: string;
 }

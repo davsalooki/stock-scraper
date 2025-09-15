@@ -9,7 +9,7 @@ export async function load() {
 		fetch(`${PUBLIC_API_URL}/watchlist`),
 		fetch(`${PUBLIC_API_URL}/stocks`)
 	]);
-	
+
 	if (!watchlistRes.ok || !stocksRes.ok) {
 		throw new Error('Failed to fetch data');
 	}
@@ -18,20 +18,20 @@ export async function load() {
 		watchlistRes.json(),
 		stocksRes.json()
 	]);
-	
+
 	const watchlist: WatchlistItem[] = watchlistData.map((item) => ({
 		exchange: item.exchange_code,
 		ticker: item.ticker_symbol,
 		name: item.name,
-		last: item.last,
+		last: item.last
 	}));
-	
+
 	const addStockItems: AddStockItem[] = stocksData.map((item) => ({
 		exchange: item.exchange_code,
 		ticker: item.ticker_symbol,
 		name: item.name
 	}));
-	
+
 	return {
 		watchlist,
 		addStockItems

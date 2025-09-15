@@ -25,20 +25,18 @@
 	}
 </script>
 
-<div class="flex gap-4 h-[80vh]">
-	<aside class="flex-1 min-w-0 flex flex-col">
+<div class="flex h-[80vh] gap-4">
+	<aside class="flex min-w-0 flex-1 flex-col">
 		<div class="flex-1 overflow-auto">
-			<DataTable data={data.watchlist} {columns} bind:selectedStock={selectedStock} />
+			<DataTable data={data.watchlist} {columns} bind:selectedStock />
 		</div>
 		<div class="flex-shrink-0">
-			<RemoveStockWarning selectedStock={selectedStock} />
+			<RemoveStockWarning {selectedStock} />
 			<AddStockDialog data={data.addStockItems} />
 		</div>
 	</aside>
-	
-	<main class="flex-1 min-w-0 flex items-center justify-center">
+
+	<main class="flex min-w-0 flex-1 items-center justify-center">
 		{@render children()}
 	</main>
 </div>
-
-

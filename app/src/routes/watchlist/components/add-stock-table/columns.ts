@@ -13,28 +13,26 @@ export type AddStockItem = {
 
 export const columns: ColumnDef<AddStockItem>[] = [
 	{
-		id: "select",
+		id: 'select',
 		header: ({ table }) =>
-		renderComponent(Checkbox, {
-			checked: table.getIsAllPageRowsSelected(),
-			indeterminate:
-			table.getIsSomePageRowsSelected() &&
-			!table.getIsAllPageRowsSelected(),
-			onCheckedChange: (value) => table.toggleAllPageRowsSelected(!!value),
-			"aria-label": "Select all",
-		}),
+			renderComponent(Checkbox, {
+				checked: table.getIsAllPageRowsSelected(),
+				indeterminate: table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected(),
+				onCheckedChange: (value) => table.toggleAllPageRowsSelected(!!value),
+				'aria-label': 'Select all'
+			}),
 		cell: ({ row }) =>
-		renderComponent(Checkbox, {
-			checked: row.getIsSelected(),
-			onCheckedChange: (value) => row.toggleSelected(!!value),
-			"aria-label": "Select row",
-		}),
+			renderComponent(Checkbox, {
+				checked: row.getIsSelected(),
+				onCheckedChange: (value) => row.toggleSelected(!!value),
+				'aria-label': 'Select row'
+			}),
 		enableSorting: false,
-		enableHiding: false,
+		enableHiding: false
 	},
 	{
 		accessorKey: 'exchange',
-		header: 'Exchange',
+		header: 'Exchange'
 	},
 	{
 		accessorKey: 'ticker',
@@ -42,7 +40,7 @@ export const columns: ColumnDef<AddStockItem>[] = [
 			renderComponent(SortButton, {
 				headerName: 'Ticker',
 				onclick: column.getToggleSortingHandler()
-			}),
+			})
 	},
 	{
 		accessorKey: 'name',
@@ -50,6 +48,6 @@ export const columns: ColumnDef<AddStockItem>[] = [
 			renderComponent(SortButton, {
 				headerName: 'Name',
 				onclick: column.getToggleSortingHandler()
-			}),
+			})
 	}
 ];
