@@ -13,10 +13,10 @@
 	type WatchlistProps = {
 		columns: ColumnDef<WatchlistItem>[];
 		data: WatchlistItem[];
-		selectedStockCode?: SelectedStock | null;
+		selectedStock: StockIdentifier | null;
 	};
 
-	let { data, columns, selectedStockCode = $bindable() }: WatchlistProps = $props();
+	let { data, columns, selectedStock: selectedStock = $bindable() }: WatchlistProps = $props();
 	let sorting = $state<SortingState>([]);
 		
 	const table = createSvelteTable({
@@ -63,7 +63,7 @@
 					<Table.Row
 						data-state={row.getIsSelected() && 'selected'}
 						onclick={() => {
-							selectedStockCode = {
+							selectedStock = {
 								exchange: row.original.exchange,
 								ticker: row.original.ticker
 							};
@@ -86,4 +86,4 @@
 	</Table.Root>
 </div>
 
-<p>current stock selected: {selectedStockCode ? selectedStockCode.ticker : 'None'} </p>
+<p>current stock selected: {selectedStock ? selectedStock.ticker : 'None'} </p>

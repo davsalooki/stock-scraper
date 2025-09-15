@@ -1,4 +1,4 @@
-interface SelectedStock {
+interface StockIdentifier {
     exchange?: string;
     ticker?: string;
 }
