@@ -1,10 +1,9 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
-	import DialogClose from '$lib/components/ui/dialog/dialog-close.svelte';
 	import AddStockTable from './add-stock-table/AddStockTable.svelte';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { columns } from './add-stock-table/columns.js';
-	import { type AddStockItem }	from './add-stock-table/columns.js';
+	import { type AddStockItem } from './add-stock-table/columns.js';
 
 	let { data } = $props();
 
@@ -31,7 +30,10 @@
 				<Dialog.Close>
 					<Button>Cancel</Button>
 				</Dialog.Close>
-				<form>
+				<form method="POST" action="/watchlist?/create">
+					{#each selectedStocks as stock (stock.ticker)}
+						<input type="hidden" name="stocks" value="{stock.exchange}:{stock.ticker}" />
+					{/each}
 					<Button type="submit">Confirm</Button>
 				</form>
 			</Dialog.Footer>
