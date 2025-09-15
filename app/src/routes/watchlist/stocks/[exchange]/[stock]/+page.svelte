@@ -4,13 +4,13 @@
 
     let { data } = $props();
 
-    const equityPerShare = data.financials.stats.bookValue;
-    const roe = data.financials.stats.returnEquity;
-    const eps = data.financials.stats.earnings;
-    const dps = data.financials.stats.dividends;
+    const equityPerShare = $derived(data.financials.stats.bookValue);
+    const roe = $derived(data.financials.stats.returnEquity);
+    const eps = $derived(data.financials.stats.earnings);
+    const dps = $derived(data.financials.stats.dividends);
     let requiredReturn = $state(15);
 
-    let intrinsicValue = $derived.by(() => {
+    const intrinsicValue = $derived.by(() => {
         return calculateIntrinsicValue({
             equity: equityPerShare,
             shares: 1,
