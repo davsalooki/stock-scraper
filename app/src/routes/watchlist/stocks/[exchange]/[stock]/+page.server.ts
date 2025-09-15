@@ -1,4 +1,6 @@
+import { redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
+import { PUBLIC_API_URL } from "$env/static/public";
 
 export async function load({ params }) {
     const exchange = params.exchange;
@@ -9,10 +11,8 @@ export async function load({ params }) {
     return { financials };
 }
 
-const url = 'http://localhost:8000';
-
 async function getStockFinancials(exchange: string, stock: string) {
-    const res = await fetch(`${url}/stocks/${exchange}/${stock}/financials`);
+    const res = await fetch(`${PUBLIC_API_URL}/stocks/${exchange}/${stock}/financials`);
     const data = await res.json();
     return data;
 }
@@ -23,13 +23,13 @@ export const actions: Actions = {
 		const exchange = formData.get('exchange');
 		const ticker = formData.get('ticker');
 
-		// logic to delete the stock from the watchlist
-        const res = await fetch(`${url}/watchlist/stocks/${exchange}/${ticker}`, {
+        const res = await fetch(`${PUBLIC_API_URL}/watchlist/stocks/${exchange}/${ticker}`, {
             method: 'DELETE'
         });
+
         if (!res.ok) {
             return { success: false, message: 'Failed to delete stock from watchlist' };
         }
-        return { success: true, message: 'Stock deleted from watchlist' };
+        redirect(303, '/watchlist');
 	}
 }
