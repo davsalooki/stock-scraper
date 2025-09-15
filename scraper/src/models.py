@@ -26,6 +26,11 @@ class StockSummary(StockBase):
     name: str
 
 
+class StockOverview(StockBase):
+    name: str
+    last: float
+
+
 class StockFinancials(BaseModel):
     stats: dict[str, str | int | float]
     earnings_roe_chart: str
@@ -34,3 +39,4 @@ class StockFinancials(BaseModel):
 class Stock(StockBase):
     name: str
     financials: StockFinancials
+    last: float

@@ -8,6 +8,7 @@ def setup_db():
         ticker_symbol TEXT,
         name TEXT,
         financials TEXT,
+        last REAL,
         PRIMARY KEY (exchange_code, ticker_symbol)
     )
     """

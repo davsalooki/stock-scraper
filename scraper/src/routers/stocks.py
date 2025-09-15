@@ -52,4 +52,13 @@ def update_stock(
                 stock_identifier.ticker_symbol,
             ),
         )
+
+        connection.execute(
+            "UPDATE stocks SET last = ? WHERE exchange_code = ? AND ticker_symbol = ?",
+            (
+                stock.last,
+                stock_identifier.exchange_code,
+                stock_identifier.ticker_symbol,
+            ),
+        )
     connection.close()

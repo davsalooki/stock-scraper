@@ -1,18 +1,18 @@
 from fastapi import APIRouter, status
 
 from ..dependencies import ConnectionDep, StockIdentifierDep
-from ..models import StockIdentifier, StockSummary
+from ..models import StockIdentifier, StockOverview
 from ..scraper import run_scraper
 
 router = APIRouter()
 
 
 @router.get("/watchlist")
-def get_watchlist(connection: ConnectionDep) -> list[StockSummary]:
+def get_watchlist(connection: ConnectionDep) -> list[StockOverview]:
     with connection:
         result = connection.execute(
             """
-            SELECT s.exchange_code, s.ticker_symbol, s.name
+            SELECT s.exchange_code, s.ticker_symbol, s.name, s.last
             FROM stocks s
             JOIN watchlist_items w ON s.exchange_code = w.exchange_code AND s.ticker_symbol = w.ticker_symbol
             WHERE w.watchlist_id = ?
@@ -21,7 +21,7 @@ def get_watchlist(connection: ConnectionDep) -> list[StockSummary]:
         )
         stock_summary_list = []
         for row in result.fetchall():
-            stock_summary = StockSummary(**dict(row))
+            stock_summary = StockOverview(**dict(row))
             stock_summary_list.append(stock_summary)
         return stock_summary_list
 
@@ -38,12 +38,13 @@ def add_to_watchlist(
         )
 
         connection.execute(
-            "REPLACE INTO stocks (exchange_code, ticker_symbol, name, financials) VALUES (?, ?, ?, ?)",
+            "REPLACE INTO stocks (exchange_code, ticker_symbol, name, financials, last) VALUES (?, ?, ?, ?, ?)",
             (
                 stock.exchange_code,
                 stock.ticker_symbol,
                 stock.name,
                 stock.financials.model_dump_json(),
+                stock.last
             ),
         )
     connection.close()

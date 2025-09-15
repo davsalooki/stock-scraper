@@ -72,10 +72,25 @@ def yoink_financials(
     return return_data
 
 
+def yoink_last(context: BrowserContext, page: Page, identifier: StockIdentifier) -> dict:
+    """Fetch last trade data using the API."""
+    api_request_context = context.request
+    response = api_request_context.get(
+        CONFIG["urls"]["stock_overview"],
+        params={
+            "exchangeCode": identifier.exchange_code,
+            "securityCode": identifier.ticker_symbol,
+        },
+    )
+
+    response_json = response.json()
+    return response_json["overview"]["lastPrice"]
+
+
 def run_scraper(identifier: StockIdentifier) -> Stock:
     """Scrapes stock info from CommSec."""
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True, slow_mo=1000)
+        browser = p.chromium.launch(headless=True, slow_mo=500)
         context = browser.new_context()
         page = context.new_page()
 
@@ -84,6 +99,7 @@ def run_scraper(identifier: StockIdentifier) -> Stock:
         mod_token = get_mod_token(context, page)
         financials = yoink_financials(context, page, mod_token, identifier)
         name = STOCK_ID_TO_NAME[str(identifier)]
+        last = yoink_last(context, page, identifier)
 
         browser.close()
 
@@ -92,4 +108,5 @@ def run_scraper(identifier: StockIdentifier) -> Stock:
         ticker_symbol=identifier.ticker_symbol,
         name=name,
         financials=financials,
+        last=last
     )

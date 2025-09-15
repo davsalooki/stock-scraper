@@ -2,3 +2,4 @@ urls:
   login: "https://www2.commsec.com.au/secure/login"
   financials: "https://www2.commsec.com.au/quotes/financials"
   stock_info: "https://cdn-api.markitdigital.com/apiman-gateway/CommSec/commsec-node-api/1.0/financials/company"
+  stock_overview: "https://www2.commsec.com.au/quotes/api/v1/marketinfo/overview"
