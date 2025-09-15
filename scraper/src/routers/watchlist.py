@@ -2,7 +2,7 @@ from fastapi import APIRouter, status
 
 from ..dependencies import ConnectionDep, StockIdentifierDep
 from ..models import StockIdentifier, StockOverview
-from ..scraper import run_scraper
+from ..scraper import run_scraper, run_scraper_batch
 
 router = APIRouter()
 
@@ -49,6 +49,29 @@ def add_to_watchlist(
         )
     connection.close()
 
+@router.post("/watchlist/batch", status_code=status.HTTP_201_CREATED)
+def add_to_watchlist_batch(
+    connection: ConnectionDep, stock_identifiers: list[StockIdentifier]
+) -> None:
+    stocks = run_scraper_batch(stock_identifiers)
+    with connection:
+        for stock in stocks:
+            connection.execute(
+                "INSERT INTO watchlist_items (watchlist_id, exchange_code, ticker_symbol) VALUES (?, ?, ?)",
+                (1, stock.exchange_code, stock.ticker_symbol),
+            )
+
+            connection.execute(
+                "REPLACE INTO stocks (exchange_code, ticker_symbol, name, financials, last) VALUES (?, ?, ?, ?, ?)",
+                (
+                    stock.exchange_code,
+                    stock.ticker_symbol,
+                    stock.name,
+                    stock.financials.model_dump_json(),
+                    stock.last
+                ),
+        )
+    connection.close()
 
 @router.delete(
     "/watchlist/stocks/{exchange_code}/{ticker_symbol}",

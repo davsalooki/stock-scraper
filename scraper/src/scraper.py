@@ -30,6 +30,7 @@ def get_mod_token(context: BrowserContext, page: Page) -> str:
 
     This cookie is required in the URL when requesting financial data.
     """
+    page.wait_for_load_state("networkidle", timeout=60_000)
     page.goto(CONFIG["urls"]["financials"])
 
     cookies = context.cookies()
@@ -86,11 +87,40 @@ def yoink_last(context: BrowserContext, page: Page, identifier: StockIdentifier)
     response_json = response.json()
     return response_json["overview"]["lastPrice"]
 
+def run_scraper_batch(identifiers: list[StockIdentifier]) -> list[Stock]:
+    """Scrapes stock info from CommSec for a batch of identifiers."""
+    stocks = []
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False, slow_mo=100)
+        context = browser.new_context()
+        page = context.new_page()
+
+        login(context, page)
+
+        mod_token = get_mod_token(context, page)
+
+        for identifier in identifiers:
+            financials = yoink_financials(context, page, mod_token, identifier)
+            name = STOCK_ID_TO_NAME[str(identifier)]
+            last = yoink_last(context, page, identifier)
+
+            stock = Stock(
+                exchange_code=identifier.exchange_code,
+                ticker_symbol=identifier.ticker_symbol,
+                name=name,
+                financials=financials,
+                last=last
+            )
+            stocks.append(stock)
+
+        browser.close()
+
+    return stocks
 
 def run_scraper(identifier: StockIdentifier) -> Stock:
     """Scrapes stock info from CommSec."""
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True, slow_mo=500)
+        browser = p.chromium.launch(headless=False, slow_mo=100)
         context = browser.new_context()
         page = context.new_page()
 
