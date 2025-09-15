@@ -9,19 +9,19 @@
 
 	console.log(page.params, page.route, page.url);
 
-	let selectedStockCode = $state<SelectedStock | null>(null);
+	let selectedStock = $state<StockIdentifier | null>(null);
 	if (page.url.pathname.includes('stocks')) {
-		selectedStockCode = {
+		selectedStock = {
 			exchange: page.params.exchange,
 			ticker: page.params.stock
 		};
 	}
 </script>
 
-<DataTable data={data.watchlist} {columns} bind:selectedStockCode />
+<DataTable data={data.watchlist} {columns} bind:selectedStock={selectedStock} />
 
 <div class="flex space-x-1">
-	<RemoveStockWarning {selectedStockCode} />
+	<RemoveStockWarning selectedStock={selectedStock} />
 	<AddStockDialog data={data.addStockItems} />
 </div>
 
