@@ -1,12 +1,7 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 import type { AddStockItem } from './components/add-stock-table/columns.js';
 import type { WatchlistItem } from './components/watchlist-table/columns.js';
-
-type StockSummary = {
-	exchange_code: string;
-	ticker_symbol: string;
-	name: string;
-}
+import type { StockSummary } from './types.js';
 
 export async function load() {
 	// Fetch both APIs in parallel for better performance
